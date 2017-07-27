@@ -6,7 +6,7 @@
 namespace app\controllers;
 
 
-use app\models\Main;
+use app\models\Task;
 use vendor\core\base\BaseController;
 
 class AppController extends BaseController
@@ -21,7 +21,7 @@ class AppController extends BaseController
     {
         parent::__construct($route);
 
-        new Main();
+        new Task();
         $this->menu = \R::findAll('category');
     }
 

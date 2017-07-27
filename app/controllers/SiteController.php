@@ -2,17 +2,17 @@
 
 namespace app\controllers;
 
-use app\models\Main;
+use app\models\Task;
 use vendor\libs\helpers\DebugHelper;
 
 /**
  * Created by Nikolay Tuzov
  */
-class MainController extends AppController
+class SiteController extends AppController
 {
     public function actionIndex()
     {
-        $model = new Main();
+        $model = new Task();
         $windows = \R::findAll('window');
 
         $menu = $this->menu;

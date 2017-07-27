@@ -5,7 +5,7 @@ use vendor\core\base\BaseModel;
 /**
  * created by: Nikolay Tuzov
  */
-class Main extends BaseModel
+class Task extends BaseModel
 {
-    public $table = 'window';
+    public $table = 'task';
 }
