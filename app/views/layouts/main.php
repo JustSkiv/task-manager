@@ -32,7 +32,11 @@
     <![endif]-->
 </head>
 <body>
-<h1>Main Layout</h1>
+<div class="page-header">
+    <h1>Simple Task Manager
+        <small>Список задач</small>
+    </h1>
+</div>
 
 <div class="container">
     <?php if (!empty($menu)): ?>

@@ -7,5 +7,5 @@ use vendor\core\base\BaseModel;
  */
 class Task extends BaseModel
 {
-    public $table = 'task';
+    public static $table = 'task';
 }
