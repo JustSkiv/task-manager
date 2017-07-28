@@ -20,9 +20,6 @@ class AppController extends BaseController
     public function __construct($route)
     {
         parent::__construct($route);
-
-        new Task();
-        $this->menu = \R::findAll('category');
     }
 
     public function setMeta(array $meta)

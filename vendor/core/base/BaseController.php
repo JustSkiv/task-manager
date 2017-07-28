@@ -60,4 +60,11 @@ abstract class BaseController
         $this->data = $data;
     }
 
+    public function redirect($url)
+    {
+        header('Location: ' . $url);
+        exit;
+
+    }
+
 }

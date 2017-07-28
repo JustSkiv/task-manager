@@ -1,2 +1,4 @@
 .idea/*
 config/config_db.php
+
+public/images/*

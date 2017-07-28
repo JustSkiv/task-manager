@@ -21,9 +21,16 @@ abstract class BaseModel
         $this->db = Db::instance();
     }
 
-    public static function findAll()
+    public static function findAll($options = '')
     {
-        return \R::findAll(static::$table);
+        Db::instance();
+        return \R::findAll(static::$table, $options);
+    }
+
+    public static function getPageElements($page, $limit)
+    {
+        $sqlPage = 'ORDER BY title LIMIT ' . (($page - 1) * $limit) . ', ' . $limit;
+        return self::findAll($sqlPage);
     }
 
     //Этот код был написан до подключения RedBean
