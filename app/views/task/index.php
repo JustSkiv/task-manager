@@ -23,7 +23,7 @@
             <th><a href="/?sort=<?= $sort == 'user_name' ? '-user_name' : 'user_name' ?>">Имя пользователя</a></th>
             <th><a href="/?sort=<?= $sort == 'user_email' ? '-user_email' : 'user_email' ?>">E-mail</a></th>
             <th>Изображение</th>
-            <?php if ($_SESSION['admin'] === true): ?>
+            <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
                 <th>Действия</th>
             <?php endif; ?>
         </tr>
@@ -43,7 +43,7 @@
                         <img src="/images/task/<?= $task->image ?>"/>
                     <?php endif; ?>
                 </td>
-                <?php if ($_SESSION['admin'] === true): ?>
+                <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
                     <th><a href="/task/update?id=<?= $task->id ?>">Редактировать</a></th>
                 <?php endif; ?>
             </tr>

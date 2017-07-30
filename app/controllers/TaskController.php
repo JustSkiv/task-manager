@@ -52,6 +52,9 @@ class TaskController extends AppController
         $this->setData(compact('tasks', 'page', 'pagesCount', 'next', 'previous', 'sort'));
     }
 
+    /**
+     * Добавление задачи
+     */
     public function actionCreate()
     {
         if (isset($_POST) && !empty($_POST)) {
@@ -73,8 +76,16 @@ class TaskController extends AppController
         }
     }
 
+    /**
+     * Редактирование задачи
+     */
     public function actionUpdate()
     {
+        // Если пользователь не админ, доступ на эту страницу закрыт
+        if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
+            $this->redirect('/');
+        }
+
         Db::instance();
 
         $id = $_GET['id'];
