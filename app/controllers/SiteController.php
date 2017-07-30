@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\Task;
-use vendor\libs\helpers\DebugHelper;
 
 /**
  * Created by Nikolay Tuzov
@@ -27,9 +26,28 @@ class SiteController extends AppController
         );
     }
 
-    public function actionTest()
+    public function actionSignin()
     {
+        if (isset($_POST['login']) && isset($_POST['password'])) {
+            if ($_POST['login'] == 'admin' && $_POST['password'] == '123') {
+                $_SESSION['admin'] = true;
 
+                $this->redirect('/');
+            }
+        }
+
+        if ($_SESSION['admin'] === true) {
+            $this->redirect('/');
+        }
+    }
+
+    public function actionSignout()
+    {
+        if ($_SESSION['admin'] === true) {
+            $_SESSION['admin'] = false;
+        }
+
+        $this->redirect('/');
     }
 
 }

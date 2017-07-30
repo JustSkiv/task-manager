@@ -7,6 +7,7 @@
 /** @var integer $pagesCount */
 /** @var boolean $previous */
 /** @var boolean $next */
+/** @var string $sort */
 ?>
 
 <div class="panel panel-default">
@@ -16,10 +17,15 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>Имя пользователя</th>
-            <th>E-mail</th>
+            <th><a href="/?sort=<?= $sort == 'status' ? '-status' : 'status' ?>">Статус</a></th>
             <th>Заголовок</th>
+            <th>Текст</th>
+            <th><a href="/?sort=<?= $sort == 'user_name' ? '-user_name' : 'user_name' ?>">Имя пользователя</a></th>
+            <th><a href="/?sort=<?= $sort == 'user_email' ? '-user_email' : 'user_email' ?>">E-mail</a></th>
             <th>Изображение</th>
+            <?php if ($_SESSION['admin'] === true): ?>
+                <th>Действия</th>
+            <?php endif; ?>
         </tr>
         </thead>
         <tbody>
@@ -27,14 +33,19 @@
         <?php foreach ($tasks as $task): ?>
             <tr>
                 <th scope="row"><?= $task->id ?></th>
+                <td><?= $task->status ? 'Выполнена' : 'Не выполнена' ?></td>
+                <td><?= $task->title ?></td>
+                <td><?= $task->text ?></td>
                 <td><?= $task->user_name ?></td>
                 <td><?= $task->user_email ?></td>
-                <td><?= $task->title ?></td>
                 <td>
                     <?php if ($task->image): ?>
                         <img src="/images/task/<?= $task->image ?>"/>
                     <?php endif; ?>
                 </td>
+                <?php if ($_SESSION['admin'] === true): ?>
+                    <th><a href="/task/update?id=<?= $task->id ?>">Редактировать</a></th>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
         </tbody>

@@ -27,9 +27,9 @@ abstract class BaseModel
         return \R::findAll(static::$table, $options);
     }
 
-    public static function getPageElements($page, $limit)
+    public static function getPageElements($page, $limit, $sort, $order)
     {
-        $sqlPage = 'ORDER BY title LIMIT ' . (($page - 1) * $limit) . ', ' . $limit;
+        $sqlPage = "ORDER BY $sort $order LIMIT " . (($page - 1) * $limit) . ', ' . $limit;
         return self::findAll($sqlPage);
     }
 
