@@ -12,8 +12,14 @@ use vendor\libs\SimpleImage;
 
 class TaskController extends AppController
 {
+    /**
+     * Список задач
+     */
     public function actionIndex()
     {
+        $this->setTitle('Список задач');
+
+        // Устанавливаем соединение с БД
         Db::instance();
 
         $page = 1;
@@ -23,32 +29,37 @@ class TaskController extends AppController
         $tasksCount = \R::count('task');
         $pagesCount = ceil($tasksCount / $limit);
 
+        // Если есть параметр с номером страницы, используем его
         if (isset($_GET['page']) && !empty($_GET['page']) && $tasksCount > 0) {
+            // Проверяем корректность указанной страницы
             $page = $_GET['page'] > $pagesCount ? $pagesCount : $_GET['page'];
         }
 
+        // Сортировка списка задач
         $sort = 'id';
         $order = 'ASC';
         if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-            $sort = $_GET['sort'];
+            if (in_array($_GET['sort'], Task::$sortFieldsArray)) {
+                $sort = $_GET['sort'];
+            }
 
             if ($sort[0] == '-') {
                 $order = 'DESC';
             }
         }
 
+        // Получаем список задач с учетом нужной страницы и сортировки
         $tasks = Task::getPageElements($page, $limit, ltrim($sort, '-'), $order);
 
-
+        // Проверяем, нужны ли кнопки "следующая/предыдущая страница"
         $previous = false;
         $next = false;
-
         if ($page > 1 && $tasksCount > 3)
             $previous = true;
-
         if ($page < $pagesCount)
             $next = $page + 1;
 
+        // Передаём данные в представление
         $this->setData(compact('tasks', 'page', 'pagesCount', 'next', 'previous', 'sort'));
     }
 
@@ -57,20 +68,23 @@ class TaskController extends AppController
      */
     public function actionCreate()
     {
+        $this->setTitle('Добавление задачи');
+
         if (isset($_POST) && !empty($_POST)) {
+            // Устанавливаем соединение с БД
             $this->db = Db::instance();
             $task = \R::dispense('task');
-            $task->title = $_POST['title'];
-            $task->user_name = $_POST['user_name'];
-            $task->user_email = $_POST['user_email'];
-            $task->text = $_POST['text'];
 
+            // Загружаем данные в модель
+            Task::loadData($task, $_POST);
 
+            // Обраотка изображения, если оно есть
             if (isset($_FILES['image'])) {
                 $file = $_FILES['image'];
                 $this->saveImage($file, $task);
             }
 
+            // Сохраняем модель в БД
             \R::store($task);
             $this->redirect('/');
         }
@@ -78,31 +92,31 @@ class TaskController extends AppController
 
     /**
      * Редактирование задачи
+     * TODO: Часть функционала дублирует actionCreate, можно обобщить эти методы
      */
     public function actionUpdate()
     {
+        $this->setTitle('Редактирование задачи');
         // Если пользователь не админ, доступ на эту страницу закрыт
         if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
             $this->redirect('/');
         }
 
+        // Устанавливаем соединение с БД
         Db::instance();
-
-        $id = $_GET['id'];
-        $task = \R::load('task', $id);
+        $task = \R::load('task', $_GET['id']);
 
         if (isset($_POST) && !empty($_POST)) {
-            $task->title = $_POST['title'];
-            $task->user_name = $_POST['user_name'];
-            $task->user_email = $_POST['user_email'];
-            $task->text = $_POST['text'];
+            // Загружаем данные в модель
+            Task::loadData($task, $_POST);
 
-
-            if (isset($_FILES['image'])) {
+            // Обраотка изображения, если оно есть
+            if (isset($_FILES['image']) && !empty($_FILES['image'])) {
                 $file = $_FILES['image'];
                 $this->saveImage($file, $task);
             }
 
+            // Сохраняем модель в БД
             \R::store($task);
             $this->redirect('/');
         }
@@ -143,6 +157,7 @@ class TaskController extends AppController
             $image = new SimpleImage();
             $image->load($file_tmp);
 
+            // Если размеры слишком большие, изменяем их
             if ($image->getWidth() > Task::MAX_WIDTH)
                 $image->resizeToWidth(Task::MAX_WIDTH);
             if ($image->getHeight() > Task::MAX_HEIGHT)
@@ -151,8 +166,6 @@ class TaskController extends AppController
             $image->save($file_path);
 
             $task->image = $file_name;
-        } else {
-            print_r($errors);
         }
     }
 }

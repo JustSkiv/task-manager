@@ -9,25 +9,9 @@ use app\models\Task;
  */
 class SiteController extends AppController
 {
-    public function actionIndex()
-    {
-        $model = new Task();
-        $windows = \R::findAll('window');
-
-        $menu = $this->menu;
-        $this->setMeta([
-            'keywords' => 'Meta main keywords',
-            'description' => 'Meta main description'
-        ]);
-        $meta = $this->meta;
-
-        $this->setData(
-            compact('windows', 'menu', 'meta')
-        );
-    }
-
     public function actionSignin()
     {
+        $this->setTitle('Авторизация');
         if (isset($_POST['login']) && isset($_POST['password'])) {
             if ($_POST['login'] == 'admin' && $_POST['password'] == '123') {
                 $_SESSION['admin'] = true;
@@ -36,7 +20,7 @@ class SiteController extends AppController
             }
         }
 
-        if ($_SESSION['admin'] === true) {
+        if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
             $this->redirect('/');
         }
     }

@@ -35,15 +35,20 @@
         <div class="form-group">
             <label for="comment">Текст:</label>
             <textarea name="text" class="form-control" rows="5" id="text" placeholder="Текст задачи"
-                      v-model="text"><?= $task['text'] ?>" </textarea>
+                      v-model="text"><?= htmlentities($task['text']) ?>" </textarea>
         </div>
 
         <div id="image-preview-div" style="display: none;">
-            <label for="exampleInputFile">Selected image:</label>
+            <label for="exampleInputFile">Выбранное изображение:</label>
         </div>
         <div class="form-group">
             <input type="file" name="image" id="file">
         </div>
+
+        <div class="checkbox">
+            <label><input name="status" type="checkbox" value="1" <?php if ($task['status']) echo 'checked'; ?>>Выполнена</label>
+        </div>
+
         <button class="btn btn-success">Сохранить</button>
 
         <button class="btn btn-primary" v-on:click.prevent="tooglePreview">{{ buttonText }}</button>
@@ -86,10 +91,10 @@
     formApp = new Vue({
         el: '#form',
         data: {
-            title: '<?= $task['title'] ?>',
-            userName: '<?= $task['user_name'] ?>',
-            userEmail: '<?= $task['user_email'] ?>',
-            text: '<?= $task['text'] ?>',
+            title: '<?= htmlspecialchars_decode($task['title']) ?>',
+            userName: '<?= htmlspecialchars_decode($task['user_name']) ?>',
+            userEmail: '<?= htmlspecialchars_decode($task['user_email']) ?>',
+            text: '<?= htmlspecialchars_decode($task['text']) ?>',
             imageLink: '<?= $task['image'] ? '/images/task/' . $task['image'] : ''; ?>',
             showPreview: false,
             buttonText: 'Предварительный просмотр'

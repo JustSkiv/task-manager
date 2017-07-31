@@ -33,6 +33,12 @@ abstract class BaseController
     public $data = [];
 
     /**
+     * Заголовок страницы
+     * @var string
+     */
+    protected $pageTitle = '';
+
+    /**
      * BaseController constructor.
      * @param array $route
      */
@@ -58,13 +64,28 @@ abstract class BaseController
     public function setData($data)
     {
         $this->data = $data;
+        $this->data['pageTitle'] = $this->pageTitle;
     }
 
+    /**
+     * Установка заголовка страницы
+     * @param $title
+     */
+    public function setTitle($title)
+    {
+        $this->pageTitle = $title;
+        $this->data['pageTitle'] = $this->pageTitle;
+    }
+
+    /**
+     * Перенаправляем запрос по указанному адресу
+     * @param $url
+     */
     public function redirect($url)
     {
         header('Location: ' . $url);
         exit;
-
     }
+
 
 }
